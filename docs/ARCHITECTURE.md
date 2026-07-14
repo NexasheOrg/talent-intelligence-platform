@@ -20,16 +20,16 @@ Facts and dimensions everyone downstream can rely on. Keep names stable; changes
 PR + a note in this doc.
 
 **Dimensions**
-- `dim_consultant` — consultant_id, name, skills, seniority, location, cost_rate, hire_date, status
-- `dim_client` — client_id, name, industry, tier, start_date
-- `dim_date` — standard calendar dimension
-- `dim_job` — job_id, client_id, title, skills_required, open_date, status
+- `dim_consultant` - consultant_id, name, skills, seniority, location, cost_rate, hire_date, status
+- `dim_client` - client_id, name, industry, tier, start_date
+- `dim_date` - standard calendar dimension
+- `dim_job` - job_id, client_id, title, skills_required, open_date, status
 
 **Facts**
-- `fact_placements` — placement_id, consultant_id, client_id, job_id, start/end, bill_rate, margin
-- `fact_timesheets` — consultant_id, date, hours_billable, hours_bench, project_id
-- `fact_pipeline` — job_id, consultant_id, stage (submitted/interview/offer/placed/rejected), stage_date
-- `fact_bench` — consultant_id, bench_start, bench_end, days_on_bench
+- `fact_placements` - placement_id, consultant_id, client_id, job_id, start/end, bill_rate, margin
+- `fact_timesheets` - consultant_id, date, hours_billable, hours_bench, project_id
+- `fact_pipeline` - job_id, consultant_id, stage (submitted/interview/offer/placed/rejected), stage_date
+- `fact_bench` - consultant_id, bench_start, bench_end, days_on_bench
 
 ## 3. Serving layer
 
@@ -47,9 +47,9 @@ Placement Funnel, Timesheet/Billing, Client Health.
 
 ## 5. Environments
 
-- **local** — Docker Compose brings up Postgres + API + web + services; seed data from
+- **local** - Docker Compose brings up Postgres + API + web + services; seed data from
   `data/seed/`. This is where everyone develops. No cloud account needed to contribute.
-- **cloud (target)** — Azure: ADLS Gen2 (lake), Synapse/Snowflake (warehouse), AKS (services),
+- **cloud (target)** - Azure: ADLS Gen2 (lake), Synapse/Snowflake (warehouse), AKS (services),
   provisioned via Terraform in `infra/`.
 
 ## 6. Non-negotiables

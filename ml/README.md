@@ -2,8 +2,8 @@
 
 Predictive modeling on the gold layer.
 
-- `notebooks/` — exploration, feature engineering, model comparison
-- `src/` — training pipeline + a scoring service (`/score/attrition`)
+- `notebooks/` - exploration, feature engineering, model comparison
+- `src/` - training pipeline + a scoring service (`/score/attrition`)
 
 **First model:** attrition-risk / bench-duration scoring per consultant. Compare a few
 supervised models (logistic regression, tree ensembles), track metrics (precision/recall/F1),

@@ -1,29 +1,29 @@
 # Talent & Delivery Intelligence Platform (TIP)
 
-> The analytics brain for a staffing / IT-services firm — one place for the numbers that
+> The analytics brain for a staffing / IT-services firm - one place for the numbers that
 > actually run the business: consultant utilization & bench time, the
 > submission → interview → placement funnel, timesheet & billing health, attrition
 > risk, and client health.
 
 TIP ingests data from operational systems (HRMS, ATS, timesheets, CRM), models it in a
 lakehouse, and serves it back as **dashboards**, a **predictive ML model**, and an
-**"ask your data" AI assistant**. It is built to plug into an existing HRMS (e.g. SproxHRMS)
-so a company like Nexashe or Dhanutek can run it internally.
+**"ask your data" AI assistant**. It plugs into the systems a staffing or recruitment
+company already runs (HRMS, ATS, timesheets, CRM) so they can run it internally.
 
 ---
 
 ## Why this exists
 
 Staffing / IT-services firms make money on people and placements, but the numbers that
-decide profit — who's on the bench, how long, which clients are healthy, who's at risk of
-leaving — usually live scattered across spreadsheets and separate apps. TIP unifies them and
+decide profit - who's on the bench, how long, which clients are healthy, who's at risk of
+leaving - usually live scattered across spreadsheets and separate apps. TIP unifies them and
 puts an analytics + AI layer on top.
 
 ## What it does (product surface)
 
-- **Dashboards** — utilization & bench, placement funnel, timesheet/billing, client health.
-- **Predictive model** — attrition-risk / bench-duration scoring per consultant.
-- **Ask your data** — natural-language questions answered over the warehouse (NL→SQL) and
+- **Dashboards** - utilization & bench, placement funnel, timesheet/billing, client health.
+- **Predictive model** - attrition-risk / bench-duration scoring per consultant.
+- **Ask your data** - natural-language questions answered over the warehouse (NL→SQL) and
   policy/SOW documents (RAG).
 
 ## Architecture at a glance
@@ -53,11 +53,17 @@ Full detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | Ingestion / transforms | Python, PySpark, dbt | Azure Data Factory + Databricks |
 | Lake / warehouse | DuckDB / Postgres | ADLS Gen2 + Synapse / Snowflake |
 | Infra | Docker Compose, Terraform | Azure (ADLS, ACR, AKS) |
-| API | Spring Boot (or Node) + RBAC | same, containerized |
+| API | Python + FastAPI + RBAC | same, containerized |
 | Web | React + TypeScript + Vite + Recharts/D3 | same |
 | ML | Python, scikit-learn | same, MLflow tracking |
 | AI assistant | Python + FastAPI, vector DB | same |
 | CI/CD | GitHub Actions | GitHub Actions |
+
+**Why this stack:** the entire backend (API, ML, AI) is **one language, Python** so it deploys
+as one set of containers with one skillset. The frontend is **React + TypeScript** because the
+team already knows it and it's the industry default. React also keeps a clean path to a
+**mobile app later** via React Native / Expo (same language, shared logic) - the web app is
+built responsive so it already works on a phone browser in the meantime.
 
 ## Repository layout
 

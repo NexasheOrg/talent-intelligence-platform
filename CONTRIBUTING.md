@@ -19,7 +19,7 @@ read this once fully.
 - Present tense, scoped: `api: add RBAC middleware`, `data-platform: build silver timesheets`.
 
 ## The golden rules
-1. **No real or customer data in git — ever.** Only the synthetic seed generator.
+1. **No real or customer data in git - ever.** Only the synthetic seed generator.
 2. **Don't break the gold schema** without a PR + updating `docs/ARCHITECTURE.md`.
 3. **Your slice must run locally** from seed data before you call it done.
 4. Write a test for anything with logic. A dashboard needs a screenshot in the PR.
