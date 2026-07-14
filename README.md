@@ -105,7 +105,8 @@ python data/seed/generate_seed.py
 ```
 
 Then read the doc for **your** layer's README, and pick up your starter issue.
-New to the team? Read [`CONTRIBUTING.md`](CONTRIBUTING.md) first.
+**New to the team or new to coding?** Start with [`docs/ONBOARDING.md`](docs/ONBOARDING.md) (what
+to install, how to set up, how to run), then [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Team & ownership
 
