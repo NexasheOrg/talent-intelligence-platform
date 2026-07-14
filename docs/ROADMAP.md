@@ -3,26 +3,26 @@
 We ship a **thin vertical slice end-to-end first**, then widen. Scope discipline is how this
 stays achievable for a 5-person team with two juniors.
 
-## Milestone 0 - Foundations (week 1)
+## Milestone 0 - Foundations
 - [ ] Repo scaffold, CI green, Docker Compose brings the stack up locally
 - [ ] Synthetic seed generator produces consultants, clients, jobs, timesheets, placements
 - [ ] Gold star-schema agreed and documented (the contract)
 - **Exit:** everyone can `docker compose up` and see seed data in Postgres
 
-## Milestone 1 - Thin slice (weeks 2-3)
+## Milestone 1 - Thin slice
 - [ ] Ingestion: one source (CSV/seed) → bronze → silver → gold (Praveen + Sujith)
 - [ ] API: RBAC + one endpoint serving `fact_bench` / utilization (Amulya)
 - [ ] Web: one dashboard - **Utilization & Bench** (Laya)
 - [ ] ML: first attrition-risk model trained on seed, `/score` endpoint (Eshwar)
 - **Exit:** one dashboard live end-to-end + a risk score visible in the UI
 
-## Milestone 2 - Widen the product (weeks 4-6)
+## Milestone 2 - Widen the product
 - [ ] Dashboards: Placement Funnel, Timesheet/Billing, Client Health
 - [ ] AI assistant: NL→SQL over gold (allow-listed, read-only) - "ask your data" box
 - [ ] Data-quality checks + tests across silver/gold
 - [ ] Infra: Terraform for the cloud target; CI deploys a container
 
-## Milestone 3 - Production-shaped (weeks 7+)
+## Milestone 3 - Production-shaped
 - [ ] Swap DuckDB/Postgres MVP for the Azure lakehouse target (ADLS + Synapse/Snowflake)
 - [ ] RAG over policy/SOW documents in the assistant
 - [ ] MLflow experiment tracking + model monitoring

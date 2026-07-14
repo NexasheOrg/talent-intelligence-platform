@@ -1,7 +1,9 @@
-# seed output (never commit data, even synthetic)
+# data outputs (never commit data, even synthetic). Small test fixtures under
+# tests/ or a fixtures/ dir are allowed on purpose.
 data/seed/out/
-*.csv
-!docs/**/*.csv
+data/raw/
+*.parquet
+**/*.data.csv
 
 # python
 __pycache__/

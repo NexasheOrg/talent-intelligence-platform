@@ -10,6 +10,10 @@ lakehouse, and serves it back as **dashboards**, a **predictive ML model**, and 
 **"ask your data" AI assistant**. It plugs into the systems a staffing or recruitment
 company already runs (HRMS, ATS, timesheets, CRM) so they can run it internally.
 
+> **Status: early-stage scaffold.** This repo currently contains the architecture, the docs,
+> the synthetic seed generator, and CI. The per-layer folders are structured but not yet
+> built out - see [`docs/ROADMAP.md`](docs/ROADMAP.md) for what's next.
+
 ---
 
 ## Why this exists

@@ -1,0 +1,12 @@
+# Shared Python tooling config for the repo's Python layers.
+# Each service may add its own dependency manifest; this file holds lint/test config.
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# Uses ruff's default lint rules (pyflakes + a pycodestyle subset). Kept intentionally
+# conservative so CI is about real problems, not style bikeshedding.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

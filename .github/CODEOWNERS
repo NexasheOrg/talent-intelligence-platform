@@ -1,0 +1,13 @@
+# Code owners get auto-requested for review on PRs touching their paths.
+# Left as a template on purpose: fill in real GitHub handles when you assign owners.
+# Format:  <path>   @github-handle
+#
+# Proposed mapping (see docs/ROLES.md) — uncomment and add handles to activate:
+#
+# /data-platform/   @<praveen-handle>
+# /infra/           @<sujith-handle>
+# /api/             @<amulya-handle>
+# /web/             @slay-a @<eshwar-handle>
+# /ml/              @<eshwar-handle>
+# /ai-assistant/    @<eshwar-handle> @slay-a
+# /docs/            @slay-a
