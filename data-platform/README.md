@@ -11,3 +11,7 @@ star schema everyone downstream depends on.
 **Stack:** Python, PySpark, dbt · MVP target Postgres/DuckDB · cloud target Databricks/Synapse.
 **Contract:** the gold schema in [`../docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - change
 only by PR. Everything here must run locally against `data/seed/`.
+
+**M0 (built):** `models/gold_schema.sql` defines the gold tables and `load_seed.py` loads the
+seed CSVs into Postgres. Run the whole stack from the repo root with `docker compose up --build`.
+Next: split this into real bronze -> silver -> gold transforms with data-quality checks.

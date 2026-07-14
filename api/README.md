@@ -9,3 +9,7 @@ CI/CD pipeline.
 exec each see a different slice. Also proxies the ML scoring endpoint to the web app.
 Keeping the API in Python means the whole backend (API + ML + AI) is one language and deploys
 together. **Stack:** FastAPI, Python, Docker, GitHub Actions.
+
+**M0 (built):** `main.py` serves `/health`, `/api/utilization`, and `/api/bench-by-seniority`
+from the gold layer. Runs as part of `docker compose up` (root), on http://localhost:8000.
+Next: auth + RBAC, and proxy the ML scoring endpoint.

@@ -4,10 +4,10 @@ We ship a **thin vertical slice end-to-end first**, then widen. Scope discipline
 stays achievable for a 5-person team with two juniors.
 
 ## Milestone 0 - Foundations
-- [ ] Repo scaffold, CI green, Docker Compose brings the stack up locally
-- [ ] Synthetic seed generator produces consultants, clients, jobs, timesheets, placements
-- [ ] Gold star-schema agreed and documented (the contract)
-- **Exit:** everyone can `docker compose up` and see seed data in Postgres
+- [x] Repo scaffold, CI green, Docker Compose brings the stack up locally
+- [x] Synthetic seed generator produces consultants, clients, jobs, timesheets, placements
+- [x] Gold star-schema drafted, documented, and loaded into Postgres (pending team sign-off)
+- **Exit (met):** everyone can `docker compose up` and see seed data in the dashboard
 
 ## Milestone 1 - Thin slice
 - [ ] Ingestion: one source (CSV/seed) → bronze → silver → gold (Praveen + Sujith)

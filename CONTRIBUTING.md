@@ -26,9 +26,10 @@ read this once fully.
 
 ## Local dev
 ```bash
-python data/seed/generate_seed.py
-docker compose up        # (added in Milestone 0)
+docker compose up --build   # full stack: db + loader + api + web
 ```
+Dashboard at http://localhost:8080, API at http://localhost:8000. Stop with
+`docker compose down`. To generate just the seed data: `python data/seed/generate_seed.py`.
 
 ## Definition of done
 Runs locally from seed · has a test or a screenshot · reviewed · CI green · issue closed.

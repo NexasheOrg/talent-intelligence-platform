@@ -10,9 +10,9 @@ lakehouse, and serves it back as **dashboards**, a **predictive ML model**, and 
 **"ask your data" AI assistant**. It plugs into the systems a staffing or recruitment
 company already runs (HRMS, ATS, timesheets, CRM) so they can run it internally.
 
-> **Status: early-stage scaffold.** This repo currently contains the architecture, the docs,
-> the synthetic seed generator, and CI. The per-layer folders are structured but not yet
-> built out - see [`docs/ROADMAP.md`](docs/ROADMAP.md) for what's next.
+> **Status: early-stage.** The M0 slice runs end to end today: `docker compose up --build`
+> brings up a seeded Postgres, the FastAPI service, and a React dashboard showing live numbers.
+> The deeper per-layer work is next - see [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ---
 
@@ -84,10 +84,24 @@ built responsive so it already works on a phone browser in the meantime.
 
 ## Getting started
 
+Run the whole stack with one command (needs Docker Desktop):
+
 ```bash
 git clone https://github.com/NexasheOrg/talent-intelligence-platform.git
 cd talent-intelligence-platform
-python data/seed/generate_seed.py     # create synthetic data to build against
+docker compose up --build
+```
+
+Then open:
+- **Dashboard:** http://localhost:8080
+- **API:** http://localhost:8000/api/utilization  (and `/health`, `/api/bench-by-seniority`)
+
+What happens: Postgres starts, the `loader` generates synthetic seed data and loads the gold
+schema, the API serves it, and the React app displays it. Stop with `docker compose down`.
+
+Working on just one layer? You can also generate the seed data alone:
+```bash
+python data/seed/generate_seed.py
 ```
 
 Then read the doc for **your** layer's README, and pick up your starter issue.

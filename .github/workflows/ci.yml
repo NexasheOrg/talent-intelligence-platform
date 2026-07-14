@@ -19,7 +19,7 @@ jobs:
       - name: Lint
         run: ruff check .
       - name: Compile check
-        run: python -m compileall data tests
+        run: python -m compileall api data data-platform tests
       - name: Tests
         run: pytest
 
