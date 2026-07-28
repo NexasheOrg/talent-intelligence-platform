@@ -1,4 +1,4 @@
-# ml  ·  Owner: Eshwar
+# ml
 
 Predictive modeling on the gold layer.
 

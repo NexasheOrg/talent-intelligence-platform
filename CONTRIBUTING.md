@@ -7,7 +7,7 @@ read this once fully.
 - `main` is always deployable. Never push to it directly.
 - Branch per task: `feature/<area>-<short-desc>`, e.g. `feature/api-bench-endpoint`.
 - Open a PR early (draft is fine). Small PRs > big PRs.
-- Every PR needs **one review**. Juniors' first few PRs are reviewed by Laya or Praveen.
+- Every PR needs **one review**.
 - CI must be green before merge.
 
 ## Issues

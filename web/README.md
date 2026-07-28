@@ -1,4 +1,4 @@
-# web  ·  Owners: Laya + Eshwar
+# web
 
 The product surface. React SPA with the dashboards and the "ask your data" box.
 

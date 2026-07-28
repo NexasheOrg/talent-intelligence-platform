@@ -1,4 +1,4 @@
-# data-platform  ·  Owner: Praveen
+# data-platform
 
 The backbone. Ingest source data, move it through the medallion zones, and publish the gold
 star schema everyone downstream depends on.

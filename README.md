@@ -71,16 +71,16 @@ built responsive so it already works on a phone browser in the meantime.
 
 ## Repository layout
 
-| Folder | Owner | What lives here |
-|---|---|---|
-| [`data-platform/`](data-platform) | Praveen | ingestion, medallion transforms, star-schema models, data-quality checks |
-| [`infra/`](infra) | Sujith | Terraform IaC, source connectors, scheduling, storage |
-| [`api/`](api) | Amulya | backend API over the gold layer, auth + RBAC, CI/CD |
-| [`web/`](web) | Laya + Eshwar | React dashboard app |
-| [`ml/`](ml) | Eshwar | attrition-risk / bench-duration model + notebooks |
-| [`ai-assistant/`](ai-assistant) | Eshwar + Laya | NL→SQL + RAG "ask your data" service |
-| [`data/seed/`](data/seed) | shared | synthetic seed-data generator (no real data in git) |
-| [`docs/`](docs) | Laya | architecture, roles, roadmap |
+| Folder | What lives here |
+|---|---|
+| [`data-platform/`](data-platform) | ingestion, medallion transforms, star-schema models, data-quality checks |
+| [`infra/`](infra) | Terraform IaC, source connectors, scheduling, storage |
+| [`api/`](api) | backend API over the gold layer, auth + RBAC, CI/CD |
+| [`web/`](web) | React dashboard app |
+| [`ml/`](ml) | attrition-risk / bench-duration model + notebooks |
+| [`ai-assistant/`](ai-assistant) | NL→SQL + RAG "ask your data" service |
+| [`data/seed/`](data/seed) | synthetic seed-data generator (no real data in git) |
+| [`docs/`](docs) | architecture, roadmap |
 
 ## Getting started
 
@@ -107,10 +107,6 @@ python data/seed/generate_seed.py
 Then read the doc for **your** layer's README, and pick up your starter issue.
 **New to the team or new to coding?** Start with [`docs/ONBOARDING.md`](docs/ONBOARDING.md) (what
 to install, how to set up, how to run), then [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
-## Team & ownership
-
-See [`docs/ROLES.md`](docs/ROLES.md). Lead / architect: **Laya**.
 
 ## Roadmap
 

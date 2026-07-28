@@ -1,4 +1,4 @@
-# infra  ·  Owner: Sujith (pairs under Praveen)
+# infra
 
 Cloud infrastructure-as-code and the connectors that pull data from source systems.
 

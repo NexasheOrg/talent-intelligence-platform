@@ -6,11 +6,11 @@ layer. This doc is the contract every layer builds against.
 
 ## 1. Data flow (medallion)
 
-| Zone | Meaning | Format | Owner |
-|---|---|---|---|
-| **bronze** | raw, as-ingested, append-only | Parquet / raw JSON | Praveen + Sujith |
-| **silver** | cleaned, typed, deduped, conformed | Parquet / Delta | Praveen |
-| **gold** | business-ready star schema, serves API/ML/AI | Postgres / Synapse tables | Praveen |
+| Zone | Meaning | Format |
+|---|---|---|
+| **bronze** | raw, as-ingested, append-only | Parquet / raw JSON |
+| **silver** | cleaned, typed, deduped, conformed | Parquet / Delta |
+| **gold** | business-ready star schema, serves API/ML/AI | Postgres / Synapse tables |
 
 Transforms are code-reviewed and tested. Nothing skips a zone.
 

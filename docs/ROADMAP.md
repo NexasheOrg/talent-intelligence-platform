@@ -10,10 +10,10 @@ stays achievable for a 5-person team with two juniors.
 - **Exit (met):** everyone can `docker compose up` and see seed data in the dashboard
 
 ## Milestone 1 - Thin slice
-- [ ] Ingestion: one source (CSV/seed) → bronze → silver → gold (Praveen + Sujith)
-- [ ] API: RBAC + one endpoint serving `fact_bench` / utilization (Amulya)
-- [ ] Web: one dashboard - **Utilization & Bench** (Laya)
-- [ ] ML: first attrition-risk model trained on seed, `/score` endpoint (Eshwar)
+- [ ] Ingestion: one source (CSV/seed) → bronze → silver → gold
+- [ ] API: RBAC + one endpoint serving `fact_bench` / utilization
+- [ ] Web: one dashboard - **Utilization & Bench**
+- [ ] ML: first attrition-risk model trained on seed, `/score` endpoint
 - **Exit:** one dashboard live end-to-end + a risk score visible in the UI
 
 ## Milestone 2 - Widen the product

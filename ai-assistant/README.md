@@ -1,4 +1,4 @@
-# ai-assistant  ·  Owners: Eshwar + Laya
+# ai-assistant
 
 The "ask your data" service.
 
