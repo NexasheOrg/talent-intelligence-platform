@@ -8,5 +8,8 @@ target-version = "py311"
 # conservative so CI is about real problems, not style bikeshedding.
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+# `tests/` is the repo-wide suite; each service keeps its own tests next to its code.
+testpaths = ["tests", "api/tests", "data-platform/tests", "ai-assistant/tests"]
+# So `from app.main import app` and `from assistant...` resolve without installing anything.
+pythonpath = ["api", "ai-assistant"]
 addopts = "-q"

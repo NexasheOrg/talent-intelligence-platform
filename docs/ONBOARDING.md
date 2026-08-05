@@ -1,140 +1,217 @@
 # Onboarding
 
-Welcome to the team. This gets you from a fresh laptop to running the app locally. Follow it
-top to bottom. If you get stuck, ask in the team chat; don't stay blocked.
+Welcome to the team. This takes you from "the app runs" to "I've shipped a change".
+
+**Haven't got it running yet?** Start with [WINDOWS-SETUP.md](WINDOWS-SETUP.md) (or
+[RUN-WITHOUT-DOCKER.md](RUN-WITHOUT-DOCKER.md) if Docker won't install), then come back here.
+
+Commands below are shown for **PowerShell on Windows** first, with the macOS/Linux version
+underneath. Run them from the project folder.
+
+---
 
 ## 1. What this app is
 
-- A **Talent & Delivery Intelligence Platform**: the analytics brain for a staffing or
-  recruitment company.
-- It pulls together the numbers that run the business: consultant utilization, time on the
-  bench, the submission to placement funnel, timesheets, and client health.
-- It has three parts you will hear about a lot:
-  - a **data platform** that shapes raw data into clean tables,
-  - an **API** that serves those tables,
-  - a **web dashboard** plus a predictive model and an "ask your data" AI assistant.
-- We build against **synthetic (fake) data** on our laptops, so no real customer data is ever
-  needed to develop.
-- New here? Also skim the [README](../README.md) and [ARCHITECTURE](ARCHITECTURE.md).
+A **Talent & Delivery Intelligence Platform**: the analytics brain for a staffing or
+recruitment company. It pulls together the numbers that decide whether the business makes
+money - who's on the bench and for how long, how candidates move from submission to placement,
+whether hours get billed, which clients are healthy.
 
-## 2. What to install
+It has five parts, and **each of you owns one**:
 
-Install these in order. Pick the link for your operating system (Windows or Mac).
+| Folder | What it does | In one sentence |
+|---|---|---|
+| [`data-platform/`](../data-platform) | shapes raw data into clean tables | the numbers everyone else trusts |
+| [`api/`](../api) | serves those tables over HTTP | the only thing that talks to the database |
+| [`web/`](../web) | the dashboards people look at | the product surface |
+| [`ml/`](../ml) | predicts bench duration / attrition risk | the "who's at risk" number |
+| [`ai-assistant/`](../ai-assistant) | answers plain-English questions | "how many consultants know Python?" |
 
-**Must have**
-- **Git**: the version control tool. https://git-scm.com/downloads
-- **GitHub Desktop**: a friendly app to clone the repo and make commits without the terminal.
-  https://desktop.github.com
-- **VS Code**: the code editor we use. https://code.visualstudio.com
-- **Docker Desktop**: runs the whole app with one command. https://www.docker.com/products/docker-desktop
-  - Windows: it may ask you to enable WSL 2; accept and follow its prompts.
-  - After installing, open Docker Desktop once and leave it running.
+Everything runs against **synthetic (fake) data** generated on your laptop. No real or customer
+data is ever needed to develop, and none may ever be committed. That's non-negotiable.
 
-**Only if you work directly in that layer** (you can skip these at first, Docker covers running the app)
-- **Python 3.12+** (data platform, API, ML, AI): https://www.python.org/downloads
-- **Node.js 20+** (web dashboard): https://nodejs.org (pick the LTS version)
+Worth skimming next: the [README](../README.md) and [ARCHITECTURE](ARCHITECTURE.md).
 
-**Accounts**
-- A **GitHub account**. Send your username to the lead so you get added to the
-  **NexasheOrg** organization.
+---
 
-## 3. One time setup
+## 2. Get your bearings in the running app
 
-- **Sign in to GitHub Desktop**: open it, sign in with your GitHub account.
-- **Clone the repo**: in GitHub Desktop, `File > Clone repository > NexasheOrg/talent-intelligence-platform`,
-  pick a folder, and clone.
-- **Open it in VS Code**: in GitHub Desktop click `Open in Visual Studio Code`.
-- **Recommended VS Code extensions** (Extensions panel, search and install):
-  - Python (Microsoft)
-  - Docker (Microsoft)
-  - ESLint and Prettier (for the web app)
-- **Check Docker is ready**: Docker Desktop is open and shows "running".
+Before changing anything, look at what's there:
 
-## 4. How to run the app
+- <http://localhost:8080> - the dashboard. Click every page in the left nav.
+- <http://localhost:8000/docs> - the API's own documentation, generated from the code. Every
+  endpoint has a **Try it out** button. Use it; it's the fastest way to understand the data.
+- <http://localhost:8100/docs> - the assistant, same idea.
 
-- Open a terminal in the project folder (in VS Code: `Terminal > New Terminal`).
-- Run:
-  ```bash
-  docker compose up --build
-  ```
-- The first run takes a few minutes (it downloads and builds things). Later runs are fast.
-- When it finishes starting, open:
-  - **Dashboard**: http://localhost:8080
-  - **API**: http://localhost:8000/api/utilization
-- You should see live numbers (utilization, consultants, bench) built from the fake data.
-- To stop it: press `Ctrl + C` in that terminal, then run `docker compose down`.
+Three dashboards are built. Three are marked `todo` - open one. It tells you what to build,
+which endpoint it needs, and which existing file to copy. Those are real tasks.
 
-## 5. Working on one layer, with hot reload
+---
 
-Docker runs the whole app, but while you are editing code you want it to reload as you save.
-For that, run just the layer you are changing.
+## 3. Working on the code, with hot reload
 
-### Python layers (`api`, `data-platform`, `ml`, `ai-assistant`)
+`START-HERE.bat` runs the whole app, but it doesn't pick up your edits until you restart it.
+While you're actively writing code you want the opposite: save a file, see the change.
 
-Python needs a **virtual environment** (a "venv"): a private folder of packages that belongs to
-this project only. Create it once, from the project folder:
+Run **only the layer you're changing**.
+
+### The dashboard (`web/`)
+
+```powershell
+cd web
+npm install     # first time only
+npm run dev
+```
+
+Open the address it prints - usually <http://localhost:5173>. Save a file and the browser
+updates instantly. It reads from the API on port 8000, so leave the Docker stack running (or
+just its API: `docker compose up -d db loader api`).
+
+### The Python layers (`api/`, `data-platform/`, `ml/`, `ai-assistant/`)
+
+Python packages go in a **virtual environment** ("venv") - a private folder of packages that
+belongs to this project only, so projects can't break each other. Create it once:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r api\requirements.txt -r requirements-dev.txt
+```
 
 ```bash
+# macOS / Linux
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r api/requirements.txt -r requirements-dev.txt
 ```
 
-On Windows, activate with `.venv\Scripts\activate` instead of the `source` line.
+You'll know it worked when your prompt starts with `(.venv)`. Every new terminal needs the
+activate line again; `deactivate` when you're done. `.venv/` is git-ignored, so it never gets
+committed.
 
-You will know it worked when your terminal prompt starts with `(.venv)`. After that, each new
-terminal only needs `source .venv/bin/activate`, and `deactivate` when you are done. The
-`.venv/` folder is git-ignored, so it never gets committed.
+Then run the API against the database, with auto-reload:
 
-Now start Postgres in the background and run the API against it:
-
-```bash
+```powershell
 docker compose up -d db loader
-DATABASE_URL=postgresql://tip:tip@localhost:5433/tip uvicorn main:app --reload --app-dir api --port 8000
+$env:DATABASE_URL = "postgresql://tip:tip@localhost:5433/tip"
+python -m uvicorn app.main:app --app-dir api --port 8000 --reload
 ```
-
-`--reload` restarts the API every time you save a Python file. That terminal stays busy while
-the server runs, so open a second terminal for anything else.
-
-### Web layer (`web`)
 
 ```bash
-cd web
-npm install
-npm run dev
+# macOS / Linux
+docker compose up -d db loader
+DATABASE_URL=postgresql://tip:tip@localhost:5433/tip \
+  python -m uvicorn app.main:app --app-dir api --port 8000 --reload
 ```
 
-Vite prints a URL, usually http://localhost:5173. That is a **different port** from the Docker
-dashboard on 8080; both read from the same API on port 8000.
+No Docker? Skip the `docker compose` line and use
+`sqlite:///data/local/tip.db` as the `DATABASE_URL` - see
+[RUN-WITHOUT-DOCKER.md](RUN-WITHOUT-DOCKER.md).
 
-## 6. Working on a task
+Port **5433** is deliberate: Postgres is mapped to 5433 on your machine so it can't clash with
+another Postgres on the usual 5432.
 
-- Full details are in [CONTRIBUTING](../CONTRIBUTING.md). The short version:
-  - Pick an **issue** from the repo's Issues tab and assign it to yourself.
-  - Make a **branch** for it (in GitHub Desktop: `Current Branch > New Branch`), for example
-    `feature/web-funnel-chart`.
-  - Make your changes, run the app to check them.
-  - **Commit** with a clear message and **push** (GitHub Desktop does both with buttons).
-  - Open a **Pull Request** and ask for a review. Keep PRs small.
-- Golden rule: never commit real or customer data. Only the fake seed data.
+That terminal stays busy while the server runs. Open a second one for anything else.
 
-## 7. If something goes wrong
+---
 
-- **`docker: command not found`**: Docker Desktop is not installed or not open. Open it first.
-- **Port already in use (8080 or 8000)**: another app is using that port. Find and stop it with
-  `lsof -ti:8000 | xargs kill` (swap in the port number), or ask the lead how to change the port.
-- **`error: externally-managed-environment`** when installing Python packages: you are
-  installing outside a venv, which Macs block on purpose. Create one, see section 5.
-- **`command not found: pip`**: activate your venv first (section 5); inside it, plain `pip`
-  works. Outside a venv, `pip3` is the name on a Mac.
-- **The build seems stuck the first time**: the first build is slow; give it a few minutes.
-- **Changes not showing**: stop with `docker compose down`, then `docker compose up --build`
-  again.
-- Still stuck after 15 minutes? Post the error in the team chat. Don't burn a whole afternoon.
+## 4. Running the tests
+
+Before you open a pull request, run the tests for your layer. CI runs them anyway - finding out
+here is faster than finding out there.
+
+```powershell
+python -m pytest            # all the Python tests
+python -m pytest api\tests  # just one layer
+cd web; npm test            # the dashboard
+```
+
+And the data-quality checks, if you touched anything in `data-platform/`:
+
+```powershell
+python data-platform\quality\checks.py
+```
+
+**Read the existing tests before writing yours.** Each layer's test files start with a comment
+explaining the pattern that layer uses. Copying a good test is a completely legitimate way to
+write one.
+
+---
+
+## 5. Making a change and getting it merged
+
+1. **Pick your task** from [TASKS.md](TASKS.md). Your lead will have assigned you a module.
+   Start with the `-01` task in your module - it's designed to be finishable on day one.
+2. **Make a branch.** In GitHub Desktop: `Current Branch → New Branch`. Name it
+   `feature/<area>-<what>`, e.g. `feature/web-client-health`.
+3. **Write the change.** Small steps, checking the app as you go.
+4. **Run the tests.** See above.
+5. **Commit and push.** GitHub Desktop does both with buttons. Write the message as what it
+   does: `api: add client health endpoint`.
+6. **Open a Pull Request** and ask for a review. Include a screenshot if you changed the UI.
+7. **Respond to review comments.** Being asked to change something is the normal outcome of a
+   review, not a criticism. Everyone's PRs get comments.
+
+Full rules: [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+### Keep pull requests small
+
+A PR that changes 40 files gets a slow, shallow review. A PR that changes 3 gets a fast,
+useful one. If your task feels too big for one PR, split it - and say so in the issue.
+
+---
+
+## 6. When something breaks
+
+Work down this list before asking, but **do ask** - the 15-minute rule below is real.
+
+| What you see | Usually means |
+|---|---|
+| `docker: command not found` | Docker Desktop isn't installed or isn't open. |
+| Port already in use (8080 / 8000 / 5433 / 5173) | An old run is still going. Double-click `STOP.bat`. |
+| `error: externally-managed-environment` | You're installing Python packages outside a venv. See section 3. |
+| `command not found: pip` | Activate your venv first. Outside one, macOS calls it `pip3`. |
+| `ModuleNotFoundError: No module named 'app'` | Run uvicorn with `--app-dir api` from the project root. |
+| Dashboard says "Could not reach the API" | The API isn't running, or it's still starting. Check <http://localhost:8000/health>. |
+| A chart shows axes but no bars or line | Almost always no data, not a chart bug - check the endpoint in `/docs`. |
+| Changes not showing in the Docker app | Docker runs a built copy. Use hot reload (section 3), or `STOP.bat` then `START-HERE.bat`. |
+| Tests pass locally, fail in CI | Usually a file you forgot to commit, or SQLite being more forgiving than Postgres. |
+
+To see why a container failed:
+
+```powershell
+docker compose logs api
+docker compose logs loader
+```
+
+**The 15-minute rule:** if you've been stuck on the same error for 15 minutes, post it in the
+team chat with the exact error text. That is what everyone here does. Silently losing an
+afternoon is the only version of this that's a problem.
+
+---
+
+## 7. Things that will get your PR sent back
+
+Not to be harsh - just so you know before you write it:
+
+- **Real or customer data committed.** Only the synthetic generator. This one is serious.
+- **A changed gold schema without a PR note.** Four other people build on those table names;
+  changing one silently breaks them. Update [ARCHITECTURE.md](ARCHITECTURE.md) in the same PR.
+- **SQL that only works on Postgres.** Everything must run on SQLite too, so nobody is blocked
+  on Docker. See the note at the top of `api/app/db.py`.
+- **A user's input pasted into a SQL string.** Always use `?` parameters. See
+  `api/app/routers/consultants.py`.
+- **A new number on screen with no test.** Anything with logic needs a test; a dashboard change
+  needs a screenshot in the PR.
+- **A dead `console.log` or `print()`** left in the code.
+
+---
 
 ## 8. Where to go next
 
-- Read the README in **your** layer folder: `data-platform/`, `api/`, `web/`, `ml/`,
-  `ai-assistant/`, or `infra/`.
-- Look at the M0 files already there as your example, then pick up your first issue.
-- Ask questions early. That is normal and expected here.
+- [TASKS.md](TASKS.md) - find your task.
+- The README in **your** layer's folder. It says what's built and what's next.
+- [ARCHITECTURE.md](ARCHITECTURE.md) - how the pieces fit, and the gold-schema contract.
+
+Ask questions early and often. In your first two weeks, asking too few is a much bigger problem
+than asking too many.

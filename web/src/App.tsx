@@ -1,74 +1,130 @@
-import { useEffect, useState } from 'react'
+/**
+ * App shell: the nav down the side, the routed page in the middle.
+ *
+ * To add a dashboard: write the page in `pages/`, add a `<Route>` below, and add it to `NAV`.
+ * That's the whole ceremony - three lines and a file.
+ */
 
-type Utilization = {
-  total_consultants: number
-  consultants_on_bench: number
-  billable_hours: number
-  bench_hours: number
-  utilization_pct: number
-}
+import { NavLink, Route, Routes } from 'react-router-dom'
 
-type BenchRow = { seniority: string; on_bench: number }
+import { ComingSoon } from './pages/ComingSoon'
+import { ConsultantsPage } from './pages/Consultants'
+import { FunnelPage } from './pages/Funnel'
+import { OverviewPage } from './pages/Overview'
+import { UtilizationPage } from './pages/Utilization'
+
+const NAV = [
+  { to: '/', label: 'Overview', end: true },
+  { to: '/utilization', label: 'Utilization & Bench' },
+  { to: '/funnel', label: 'Placement Funnel' },
+  { to: '/consultants', label: 'Consultants' },
+  { to: '/clients', label: 'Client Health', todo: true },
+  { to: '/billing', label: 'Timesheet & Billing', todo: true },
+  { to: '/ask', label: 'Ask your data', todo: true },
+]
 
 export default function App() {
-  const [util, setUtil] = useState<Utilization | null>(null)
-  const [bench, setBench] = useState<BenchRow[]>([])
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    Promise.all([
-      fetch('/api/utilization').then((r) => r.json()),
-      fetch('/api/bench-by-seniority').then((r) => r.json()),
-    ])
-      .then(([u, b]) => {
-        setUtil(u)
-        setBench(b.rows)
-      })
-      .catch((e) => setError(String(e)))
-  }, [])
-
-  if (error) return <main className="wrap"><p className="err">Could not reach the API: {error}</p></main>
-  if (!util) return <main className="wrap"><p>Loading…</p></main>
-
-  const maxBench = Math.max(...bench.map((r) => r.on_bench), 1)
-
   return (
-    <main className="wrap">
-      <header>
-        <h1>Talent &amp; Delivery Intelligence</h1>
-        <p className="sub">Utilization &amp; Bench - from the gold layer (synthetic data)</p>
-      </header>
+    <div className="shell">
+      <aside className="sidebar">
+        <div className="brand">
+          <span className="brand-mark">TIP</span>
+          <span className="brand-sub">Talent &amp; Delivery Intelligence</span>
+        </div>
+        <nav>
+          <ul>
+            {NAV.map((item) => (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  end={item.end}
+                  className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+                >
+                  {item.label}
+                  {item.todo && <span className="nav-todo" title="Not built yet">todo</span>}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <p className="sidebar-foot">Synthetic data only. Never real customer records.</p>
+      </aside>
 
-      <section className="kpis">
-        <Kpi label="Utilization" value={`${util.utilization_pct}%`} />
-        <Kpi label="Consultants" value={util.total_consultants} />
-        <Kpi label="On bench" value={util.consultants_on_bench} />
-        <Kpi label="Billable hrs" value={util.billable_hours} />
-      </section>
+      <main className="content">
+        <Routes>
+          <Route path="/" element={<OverviewPage />} />
+          <Route path="/utilization" element={<UtilizationPage />} />
+          <Route path="/funnel" element={<FunnelPage />} />
+          <Route path="/consultants" element={<ConsultantsPage />} />
 
-      <section className="panel">
-        <h2>Bench by seniority</h2>
-        {bench.map((r) => (
-          <div className="bar-row" key={r.seniority}>
-            <span className="bar-label">{r.seniority}</span>
-            <div className="bar-track">
-              <div className="bar-fill" style={{ width: `${(r.on_bench / maxBench) * 100}%` }} />
-            </div>
-            <span className="bar-value">{r.on_bench}</span>
-          </div>
-        ))}
-      </section>
+          {/* Unbuilt dashboards. Each one is a task; replace the element when you build it. */}
+          <Route
+            path="/clients"
+            element={
+              <ComingSoon
+                taskId="WEB-03"
+                title="Client Health"
+                purpose="Which clients are growing, which are shrinking, and which are at risk?"
+                endpoint="/api/clients/health"
+                endpointExists={false}
+                copyFrom="web/src/pages/Utilization.tsx"
+                steps={[
+                  'Build the API endpoint first (task API-03) so there is data to draw.',
+                  'Add a KPI row: active clients, total margin, clients with no placements this quarter.',
+                  'Add a table of clients sorted by margin, using the pattern in pages/Consultants.tsx.',
+                  'Add a bar chart of margin by client tier with CategoryBars.',
+                ]}
+              />
+            }
+          />
+          <Route
+            path="/billing"
+            element={
+              <ComingSoon
+                taskId="WEB-04"
+                title="Timesheet & Billing"
+                purpose="Are hours being logged, approved and billed - or leaking?"
+                endpoint="/api/billing/summary"
+                endpointExists={false}
+                copyFrom="web/src/pages/Utilization.tsx"
+                steps={[
+                  'Agree the response shape with whoever owns API-04 before either of you writes code.',
+                  'Show missing timesheets for the most recent week as the headline number.',
+                  'Add a trend of billed vs unbilled hours using LineTrend or StackedBars.',
+                ]}
+              />
+            }
+          />
+          <Route
+            path="/ask"
+            element={
+              <ComingSoon
+                taskId="AI-04"
+                title="Ask your data"
+                purpose="Answer plain-English questions over the gold layer, and show the SQL used."
+                endpoint="/api/assistant/ask"
+                endpointExists={false}
+                copyFrom="ai-assistant/assistant/service.py"
+                steps={[
+                  'The assistant service already answers a few question templates - run it first and see.',
+                  'Build a single input box that posts the question and renders the answer.',
+                  'Always show the generated SQL next to the answer. An answer nobody can check is not an answer.',
+                ]}
+              />
+            }
+          />
 
-      <footer>M0 skeleton. Charts, filters, and more dashboards land in later milestones.</footer>
-    </main>
-  )
-}
-
-function Kpi({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="kpi">
-      <div className="kpi-value">{value}</div>
-      <div className="kpi-label">{label}</div>
+          <Route
+            path="*"
+            element={
+              <div className="page-head">
+                <h1>Page not found</h1>
+                <p className="sub">That route doesn't exist. Check the nav on the left.</p>
+              </div>
+            }
+          />
+        </Routes>
+      </main>
     </div>
   )
 }

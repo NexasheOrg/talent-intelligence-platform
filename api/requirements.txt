@@ -1,3 +1,5 @@
 fastapi>=0.110
 uvicorn[standard]>=0.29
+pydantic>=2.6
+# Postgres driver. Not needed for the SQLite (no-Docker) path, but harmless to have.
 psycopg2-binary>=2.9

@@ -1,0 +1,27 @@
+# Line endings. This file prevents a class of bug that is very hard to debug from a symptom.
+#
+# Git normally converts line endings per-machine. That breaks two things here:
+#   - a .sh file checked out with Windows CRLF endings fails inside a Linux container with
+#     the famously unhelpful "no such file or directory"
+#   - a .bat file checked out with Unix LF endings can misbehave in cmd.exe
+# So we pin each type explicitly instead of relying on anyone's local git config.
+
+* text=auto
+
+# Always Windows endings - these run in cmd.exe / PowerShell on Windows.
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Always Unix endings - these run in bash, including inside Docker containers.
+*.sh       text eol=lf
+*.command  text eol=lf
+Dockerfile text eol=lf
+*.conf     text eol=lf
+
+# Binaries git should not touch.
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+*.parquet binary

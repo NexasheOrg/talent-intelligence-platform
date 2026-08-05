@@ -5,6 +5,13 @@ data/raw/
 *.parquet
 **/*.data.csv
 
+# the local SQLite warehouse built by the no-Docker route - regenerate it, don't commit it
+data/local/
+*.db
+
+# trained models and their metrics are build outputs
+ml/models/
+
 # python
 __pycache__/
 *.py[cod]

@@ -1,3 +1,5 @@
 # Dev/CI tooling used across the Python layers (data-platform, api, ml, ai-assistant).
 ruff>=0.6
 pytest>=8
+# FastAPI's TestClient calls the app through httpx.
+httpx>=0.27

@@ -1,0 +1,3 @@
+# Only needed if you're working in the ml/ layer. Not installed by the app's run scripts,
+# because scikit-learn is a large download and nobody else needs it to run the dashboard.
+scikit-learn>=1.5

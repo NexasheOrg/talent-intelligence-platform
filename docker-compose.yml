@@ -1,8 +1,15 @@
-# M0 local stack: `docker compose up --build`
-#   db     -> Postgres
-#   loader -> generates synthetic seed data and loads the gold schema, then exits
-#   api    -> FastAPI over the gold layer  (http://localhost:8000)
-#   web    -> React dashboard              (http://localhost:8080)
+# The whole app, locally, with one command:
+#
+#     docker compose up --build
+#
+# Windows users: don't type that - double-click START-HERE.bat instead. It checks Docker is
+# running, waits until the app is actually ready, and opens your browser.
+#
+#   db        -> Postgres, the warehouse
+#   loader    -> generates synthetic seed data and loads the gold schema, then exits
+#   api       -> FastAPI over the gold layer   (http://localhost:8000, docs at /docs)
+#   assistant -> "ask your data" NL->SQL       (http://localhost:8100)
+#   web       -> React dashboard               (http://localhost:8080)
 
 services:
   db:
@@ -39,6 +46,26 @@ services:
       - "8000:8000"
     depends_on:
       loader:
+        # Wait for the seed data to be loaded, not just for the container to start -
+        # otherwise the API serves empty tables for the first few seconds.
+        condition: service_completed_successfully
+    healthcheck:
+      # python, not curl: the slim image doesn't ship curl and we're not adding it just for this.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  assistant:
+    build:
+      context: ./ai-assistant
+    environment:
+      DATABASE_URL: postgresql://tip:tip@db:5432/tip
+    ports:
+      - "8100:8100"
+    depends_on:
+      loader:
         condition: service_completed_successfully
 
   web:
@@ -47,4 +74,5 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - api
+      api:
+        condition: service_healthy

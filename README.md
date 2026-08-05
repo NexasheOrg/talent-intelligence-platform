@@ -10,9 +10,10 @@ lakehouse, and serves it back as **dashboards**, a **predictive ML model**, and 
 **"ask your data" AI assistant**. It plugs into the systems a staffing or recruitment
 company already runs (HRMS, ATS, timesheets, CRM) so they can run it internally.
 
-> **Status: early-stage.** The M0 slice runs end to end today: `docker compose up --build`
-> brings up a seeded Postgres, the FastAPI service, and a React dashboard showing live numbers.
-> The deeper per-layer work is next - see [`docs/ROADMAP.md`](docs/ROADMAP.md).
+> **Status: early-stage, but runnable end to end.** One command (or one double-click on
+> Windows) brings up a seeded warehouse, the API, an NL→SQL assistant, and a multi-page React
+> dashboard with live numbers. Three dashboards are built; the rest are scoped starter tasks in
+> [`docs/TASKS.md`](docs/TASKS.md). See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the plan.
 
 ---
 
@@ -55,7 +56,7 @@ Full detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | Layer | MVP | Production target |
 |---|---|---|
 | Ingestion / transforms | Python, PySpark, dbt | Azure Data Factory + Databricks |
-| Lake / warehouse | DuckDB / Postgres | ADLS Gen2 + Synapse / Snowflake |
+| Lake / warehouse | Postgres (SQLite fallback) | ADLS Gen2 + Synapse / Snowflake |
 | Infra | Docker Compose, Terraform | Azure (ADLS, ACR, AKS) |
 | API | Python + FastAPI + RBAC | same, containerized |
 | Web | React + TypeScript + Vite + Recharts/D3 | same |
@@ -80,33 +81,43 @@ built responsive so it already works on a phone browser in the meantime.
 | [`ml/`](ml) | attrition-risk / bench-duration model + notebooks |
 | [`ai-assistant/`](ai-assistant) | NL→SQL + RAG "ask your data" service |
 | [`data/seed/`](data/seed) | synthetic seed-data generator (no real data in git) |
-| [`docs/`](docs) | architecture, roadmap |
+| [`scripts/`](scripts) | the start / stop / check-setup scripts the launchers call |
+| [`docs/`](docs) | setup, onboarding, architecture, roadmap, and the task pack |
 
 ## Getting started
 
-Run the whole stack with one command (needs Docker Desktop):
+**On Windows, or new to this kind of project?** Clone the repo with
+[GitHub Desktop](https://desktop.github.com), then **double-click `START-HERE.bat`**. It checks
+what you have installed, starts everything, waits until it's actually ready, and opens your
+browser. Click-by-click guide: [`docs/WINDOWS-SETUP.md`](docs/WINDOWS-SETUP.md).
+
+**On macOS or Linux:** double-click `start.command`, or:
 
 ```bash
 git clone https://github.com/NexasheOrg/talent-intelligence-platform.git
 cd talent-intelligence-platform
-docker compose up --build
+./scripts/start.sh          # or: docker compose up --build
 ```
 
 Then open:
-- **Dashboard:** http://localhost:8080
-- **API:** http://localhost:8000/api/utilization  (and `/health`, `/api/bench-by-seniority`)
+- **Dashboard** — http://localhost:8080
+- **API docs** — http://localhost:8000/docs (interactive, try any endpoint)
+- **Assistant** — http://localhost:8100/docs
 
 What happens: Postgres starts, the `loader` generates synthetic seed data and loads the gold
-schema, the API serves it, and the React app displays it. Stop with `docker compose down`.
+schema, the API and assistant serve it, and the React app displays it. Stop with `STOP.bat` or
+`docker compose down`.
 
-Working on just one layer? You can also generate the seed data alone:
-```bash
-python data/seed/generate_seed.py
-```
+**Can't install Docker?** (Locked-down laptop, no admin rights, virtualization off in BIOS.)
+Nobody has to be blocked on that — the same app runs on Python + SQLite with no containers:
+[`docs/RUN-WITHOUT-DOCKER.md`](docs/RUN-WITHOUT-DOCKER.md). Every query in the repo is written
+to run on both databases, and CI checks it.
 
-Then read the doc for **your** layer's README, and pick up your starter issue.
-**New to the team or new to coding?** Start with [`docs/ONBOARDING.md`](docs/ONBOARDING.md) (what
-to install, how to set up, how to run), then [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Working on just one layer? Generate the seed data alone with
+`python data/seed/generate_seed.py`, and see your layer's README for a hot-reload setup.
+
+**New to the team?** [`docs/ONBOARDING.md`](docs/ONBOARDING.md) → your starter task in
+[`docs/TASKS.md`](docs/TASKS.md) → [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Roadmap
 
