@@ -14,14 +14,98 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install dev tooling
-        run: pip install -r requirements-dev.txt
+          cache: pip
+
+      - name: Install
+        # The services' own requirements, not just the dev tools - the API tests import
+        # FastAPI, so dev tooling alone fails at collection time.
+        run: |
+          pip install -r requirements-dev.txt
+          pip install -r api/requirements.txt
+          pip install -r ai-assistant/requirements.txt
+
       - name: Lint
         run: ruff check .
-      - name: Compile check
-        run: python -m compileall api data data-platform tests
+
       - name: Tests
+        # Every suite builds a real SQLite gold layer from the seed generator, so no
+        # database service is needed for this job.
         run: pytest
 
-  # Web and service jobs are added as those layers land (see docs/ROADMAP.md).
-  # Keeping CI scoped to what exists keeps the build honest and green.
+  data-quality:
+    name: Data quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Build the gold layer and check it
+        # Guards what tests can miss: the data itself being wrong. A green test suite over a
+        # broken gold layer still puts confident wrong numbers on a dashboard.
+        run: |
+          python data-platform/load_seed.py
+          python data-platform/quality/checks.py
+
+  postgres:
+    name: Postgres compatibility
+    runs-on: ubuntu-latest
+    # Most people develop against SQLite, so without this job a Postgres-only mistake would
+    # only surface when someone next starts the Docker stack. This is what keeps the "runs on
+    # both databases" promise honest.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: tip
+          POSTGRES_PASSWORD: tip
+          POSTGRES_DB: tip
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U tip -d tip"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://tip:tip@localhost:5432/tip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          pip install -r requirements-dev.txt
+          pip install -r api/requirements.txt
+
+      - name: Load and verify against Postgres
+        run: |
+          python data-platform/load_seed.py
+          python data-platform/quality/checks.py
+
+  web:
+    name: Web (typecheck + tests + build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Tests
+        run: npm test
+
+      - name: Typecheck and build
+        # `npm run build` runs `tsc --noEmit` first, so a type error fails here rather than
+        # reaching someone's browser as undefined.
+        run: npm run build

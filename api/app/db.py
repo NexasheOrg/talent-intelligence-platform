@@ -89,7 +89,10 @@ def _clean(value):
 
 
 def _row_to_dict(row):
-    return {key: _clean(row[key]) for key in row.keys()}
+    # `.keys()` is required, not a style slip: iterating a sqlite3.Row directly yields its
+    # *values*, not its column names, so the shorter `for key in row` silently builds garbage.
+    # Ruff's SIM118 doesn't know that - hence the suppression.
+    return {key: _clean(row[key]) for key in row.keys()}  # noqa: SIM118
 
 
 def query_all(sql, params=()):

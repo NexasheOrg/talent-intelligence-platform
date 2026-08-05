@@ -10,7 +10,6 @@ matcher out (task AI-02). These tests should still pass afterwards.
 """
 
 import pytest
-
 from assistant.guardrails import validate
 from assistant.nl2sql import CannotAnswer, translate
 

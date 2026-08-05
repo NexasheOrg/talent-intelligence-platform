@@ -9,7 +9,6 @@ queries through.
 """
 
 import pytest
-
 from assistant.guardrails import MAX_LIMIT, Unsafe, validate
 
 

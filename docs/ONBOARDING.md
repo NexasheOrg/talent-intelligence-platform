@@ -17,7 +17,7 @@ recruitment company. It pulls together the numbers that decide whether the busin
 money - who's on the bench and for how long, how candidates move from submission to placement,
 whether hours get billed, which clients are healthy.
 
-It has five parts, and **each of you owns one**:
+It has five parts. There's open work in all of them - see [TASKS.md](TASKS.md):
 
 | Folder | What it does | In one sentence |
 |---|---|---|
@@ -26,6 +26,9 @@ It has five parts, and **each of you owns one**:
 | [`web/`](../web) | the dashboards people look at | the product surface |
 | [`ml/`](../ml) | predicts bench duration / attrition risk | the "who's at risk" number |
 | [`ai-assistant/`](../ai-assistant) | answers plain-English questions | "how many consultants know Python?" |
+
+Plus [`infra/`](../infra), [`scripts/`](../scripts) and
+[`.github/workflows/`](../.github/workflows) - how it all builds and runs.
 
 Everything runs against **synthetic (fake) data** generated on your laptop. No real or customer
 data is ever needed to develop, and none may ever be committed. That's non-negotiable.
@@ -140,8 +143,10 @@ write one.
 
 ## 5. Making a change and getting it merged
 
-1. **Pick your task** from [TASKS.md](TASKS.md). Your lead will have assigned you a module.
-   Start with the `-01` task in your module - it's designed to be finishable on day one.
+1. **Pick a task** from [TASKS.md](TASKS.md). Nothing is pre-assigned - choose from whichever
+   track you want to get good at, then claim it on the issue and say so in the team chat so two
+   people don't start the same thing. Every track has a `-01` that's finishable on day one;
+   start there rather than with the thing that sounds most impressive.
 2. **Make a branch.** In GitHub Desktop: `Current Branch → New Branch`. Name it
    `feature/<area>-<what>`, e.g. `feature/web-client-health`.
 3. **Write the change.** Small steps, checking the app as you go.

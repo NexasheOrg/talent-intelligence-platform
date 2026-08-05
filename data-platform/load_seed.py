@@ -84,7 +84,7 @@ def run_schema(cur, url):
 def load_table(cur, url, table, csv_path):
     """Bulk-load one CSV. Postgres has COPY; SQLite gets a plain executemany."""
     if is_postgres(url):
-        with open(csv_path, "r") as f:
+        with open(csv_path) as f:
             cur.copy_expert(
                 f"COPY {table} FROM STDIN WITH (FORMAT csv, HEADER true, NULL '')", f
             )
@@ -92,7 +92,7 @@ def load_table(cur, url, table, csv_path):
 
     import csv
 
-    with open(csv_path, "r", newline="") as f:
+    with open(csv_path, newline="") as f:
         reader = csv.reader(f)
         columns = next(reader)
         # Match Postgres's `NULL ''`: an empty CSV field means NULL, not an empty string.

@@ -47,7 +47,7 @@ def evaluate(name, y_true, y_pred):
     precision, recall, f1, _ = precision_recall_fscore_support(
         y_true, y_pred, average="binary", zero_division=0
     )
-    accuracy = sum(int(a == b) for a, b in zip(y_true, y_pred)) / len(y_true)
+    accuracy = sum(int(a == b) for a, b in zip(y_true, y_pred, strict=True)) / len(y_true)
     print(
         f"  {name:<28} accuracy {accuracy:.2f}   precision {precision:.2f}   "
         f"recall {recall:.2f}   F1 {f1:.2f}"
@@ -99,7 +99,7 @@ def main():
 
     print("\nWhat the forest thinks matters:")
     for name, importance in sorted(
-        zip(FEATURE_NAMES, forest.feature_importances_), key=lambda pair: -pair[1]
+        zip(FEATURE_NAMES, forest.feature_importances_, strict=True), key=lambda pair: -pair[1]
     ):
         print(f"  {name:<16} {importance:.3f}")
 

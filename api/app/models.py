@@ -8,7 +8,6 @@ When you add an endpoint, add its model here first - it's the contract, and it's
 way to agree on a shape before anyone writes the query or the chart.
 """
 
-from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -33,7 +32,7 @@ class BenchBySeniorityRow(BaseModel):
 
 
 class BenchBySeniority(BaseModel):
-    rows: List[BenchBySeniorityRow]
+    rows: list[BenchBySeniorityRow]
 
 
 class TrendPoint(BaseModel):
@@ -44,7 +43,7 @@ class TrendPoint(BaseModel):
 
 
 class UtilizationTrend(BaseModel):
-    rows: List[TrendPoint]
+    rows: list[TrendPoint]
 
 
 class FunnelStage(BaseModel):
@@ -54,7 +53,7 @@ class FunnelStage(BaseModel):
 
 
 class Funnel(BaseModel):
-    rows: List[FunnelStage]
+    rows: list[FunnelStage]
     total: int
 
 
@@ -65,13 +64,13 @@ class ConsultantSummary(BaseModel):
     seniority: str
     location: str
     status: str
-    days_on_bench: Optional[int] = None
+    days_on_bench: int | None = None
 
 
 class ConsultantPage(BaseModel):
     """One page of consultants, plus enough metadata to render pagination controls."""
 
-    rows: List[ConsultantSummary]
+    rows: list[ConsultantSummary]
     total: int = Field(description="Total matching consultants, ignoring pagination")
     page: int
     page_size: int
@@ -87,7 +86,7 @@ class RiskScore(BaseModel):
     consultant_id: int
     risk_score: float = Field(ge=0, le=1, description="0 = low risk, 1 = high risk")
     band: str = Field(description="low / medium / high")
-    factors: List[RiskFactor]
+    factors: list[RiskFactor]
     model: str = Field(description="Which scorer produced this - swap when the ML model lands")
 
 
@@ -100,5 +99,5 @@ class ConsultantDetail(BaseModel):
     status: str
     cost_rate: int
     hire_date: str
-    days_on_bench: Optional[int] = None
+    days_on_bench: int | None = None
     risk: RiskScore

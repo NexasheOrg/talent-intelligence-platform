@@ -79,7 +79,8 @@ intent(
 
 intent(
     "pipeline_stage_count",
-    [r"how many.*\b(candidates|people)\b.*\b(at|in)\b\s+(?P<stage>submitted|interview|offer|placed|rejected)"],
+    [r"how many.*\b(candidates|people)\b.*\b(at|in)\b\s+"
+     r"(?P<stage>submitted|interview|offer|placed|rejected)"],
     "SELECT count(*) AS value FROM fact_pipeline WHERE stage = ?",
     "{value} candidates are at that stage.",
     params=lambda match: [match.group("stage").lower()],

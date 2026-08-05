@@ -4,8 +4,21 @@
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-# Uses ruff's default lint rules (pyflakes + a pycodestyle subset). Kept intentionally
-# conservative so CI is about real problems, not style bikeshedding.
+
+[tool.ruff.lint]
+# Pinned explicitly rather than relying on ruff's defaults. Defaults change between ruff
+# releases, and since CI installs the latest, an unpinned set means someone's unrelated PR
+# goes red because a new rule shipped that morning. Lint should only fail for reasons we chose.
+#
+#   E, F  pycodestyle + pyflakes: real errors and unused/undefined names
+#   I     import order, so imports stop appearing in diffs as noise
+#   UP    modern syntax for our target Python
+#   B     bugbear: mutable default arguments and similar real traps
+#   SIM   simplifications that genuinely read better
+#
+# Adding a rule family is fine - do it in its own PR that also fixes the fallout, so nobody
+# else's branch turns red without warning.
+select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 # `tests/` is the repo-wide suite; each service keeps its own tests next to its code.

@@ -41,8 +41,7 @@ def seeded_database(tmp_path_factory):
 @pytest.fixture(scope="session")
 def client(seeded_database):
     """A FastAPI test client. Imported late so it picks up DATABASE_URL above."""
-    from fastapi.testclient import TestClient
-
     from app.main import app
+    from fastapi.testclient import TestClient
 
     return TestClient(app)

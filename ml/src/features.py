@@ -95,5 +95,5 @@ if __name__ == "__main__":
     X, y, ids = load_training_rows()
     print(f"{len(X)} rows, {sum(y)} positive ({100 * sum(y) / max(len(y), 1):.0f}%)")
     print(f"features: {', '.join(FEATURE_NAMES)}")
-    for row, label, consultant_id in list(zip(X, y, ids))[:5]:
+    for row, label, consultant_id in list(zip(X, y, ids, strict=True))[:5]:
         print(f"  consultant {consultant_id}: {row} -> {label}")

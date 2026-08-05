@@ -59,9 +59,10 @@ def score(consultant, today=None):
     days_on_bench = consultant.get("days_on_bench") or 0
     bench_ratio = min(days_on_bench / BENCH_DAYS_FOR_MAX_RISK, 1.0)
     if bench_ratio:
-        factors.append(
-            {"label": f"{days_on_bench} days on bench", "contribution": round(bench_ratio * WEIGHT_BENCH, 3)}
-        )
+        factors.append({
+            "label": f"{days_on_bench} days on bench",
+            "contribution": round(bench_ratio * WEIGHT_BENCH, 3),
+        })
 
     if consultant.get("status") != "placed":
         factors.append({"label": "Not currently placed", "contribution": WEIGHT_UNPLACED})
